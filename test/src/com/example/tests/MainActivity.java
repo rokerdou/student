@@ -3,6 +3,7 @@ package com.example.tests;
 import com.example.Service.Service;
 import com.example.dialog.DialogFactory;
 import com.example.framework.dialog.DialogModel;
+import com.example.framework.domain.Sandbox;
 import com.example.framework.widget.ToastWidget;
 
 
@@ -23,11 +24,14 @@ public class MainActivity extends BootActivity {
 			public void addRegister(Registry obj) {
 				obj.register("busy",DialogModel.getInstance());
 				obj.registerInlua("busy");
-				obj.register("login",new Service());
-				obj.registerInlua("login");
+				obj.register("service",new Service());
+				obj.registerInlua("service");
 				obj.register("toast",new ToastWidget());
 				obj.registerInlua("toast");
+				obj.register("sandbox",Sandbox.getInstance());
+				obj.registerInlua("sandbox");
 
+				obj.registerInlua("sandbox");
 				
 			}
 		});

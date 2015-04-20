@@ -1,4 +1,4 @@
-local math = require('math')  
+
 function Onclick()
 
 end
@@ -34,8 +34,20 @@ function Login()
 
 Log:i("进入了登陆函数")
 busy:show("正在登陆中");
-busy:dismiss() App:pushPage("admin_main")
---login:Login(user:getText(),pwd:getText(),login_type,function() busy:dismiss() App:pushPage("admin_main") toast:show("登陆成功") end,function(msg) busy:dismiss() toast:show(msg) end);
+
+service:Login(user:getText(),pwd:getText(),login_type,
+	function(stu) 
+		busy:dismiss()
+		if login_type==1 then
+			sandbox:push("student",stu)
+			App:pushPage("stu_main")
+		else
+			App:pushPage("admin_main")
+		end
+
+		
+		toast:show("登陆成功") 
+	end,function(msg) busy:dismiss() toast:show(msg) end);
 Log:i("退出登陆函数")
 
 --busy:dismiss();

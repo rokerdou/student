@@ -28,13 +28,14 @@ public class Service  {
 	LuaObject succ;
 	LuaObject failed;
 	Socket ss;
-	public String ip="192.168.253.21";
+	public String ip="192.168.191.2";
 	public int port=123;
 
 	
 	public synchronized void starts(Method m) {
 		// TODO Auto-generated method stub
 	ThreadFactory.getWorkThread(m).start();
+	
 
 	}
 	private void exeFucInlua(LuaObject fuc,Object [] args)
@@ -44,6 +45,7 @@ public class Service  {
 			
 			try {
 				fuc.call( args);
+			
 			} catch (LuaException e) {
 				
 				RuntimeContext.showLuaError(stat.toString(-1));
@@ -105,7 +107,7 @@ public class Service  {
 					LOG.i(this, "login state "+ms.State);
 					if(ms.State==MessageData.RESPONSE_LOGIN_SUCCESS)
 					{
-						Object [] obj = {};
+						Object [] obj = {ms.stu};
 						exeFucInlua(success,obj);
 						
 					}else
@@ -113,6 +115,46 @@ public class Service  {
 						Object [] obj = {MessageUtils.getStringbyStat(ms.State)};
 						exeFucInlua(fail,obj);
 					}
+		}
+		});
+
+
+	}
+	public synchronized void addNewStudent(final String id,final String name,
+			final String pwd,final String sex,
+			final String clssid,final String clssgrade,final String cardid,
+			final String provines,
+			final LuaObject success, final LuaObject fail)
+	{
+		succ=success;
+		failed=fail;
+		starts(new Method() {
+			
+			@Override
+			public void Work() {
+				if(id!=null&&name!=null&&pwd!=null&&sex!=null&&clssid!=null&&clssgrade!=null&&cardid!=null
+						&&(id.trim().length()>0&&name.trim().length()>0&pwd.trim().length()>0&&sex.trim().length()>0&&clssid.trim().length()>0&&clssgrade.trim().length()>0&&cardid.trim().length()>0)
+						)
+						{
+						Message ms = Request(MessageFactory.addNewStudent(id, name, pwd,sex,
+								clssid,clssgrade,cardid,provines));
+						if(ms.State==MessageData.RESPONSE_ADDSTU_SUCCESS)
+						{
+							Object [] obj = {MessageUtils.getStringbyStat(ms.State)};
+							exeFucInlua(success,obj);
+							
+						}else
+						{
+							Object [] obj = {MessageUtils.getStringbyStat(ms.State)};
+							exeFucInlua(fail,obj);
+						}
+					}
+				else
+				{
+					Object [] obj = {new String("数据格式不匹配")};
+					exeFucInlua(fail,obj);
+				}
+
 		}
 		});
 
